@@ -127,7 +127,7 @@
       "typeVersion": 3,
       "position": [
         -416,
-        832
+        944
       ],
       "id": "2ed6c19e-651c-434e-80d4-1e548da19656",
       "name": "Loop de Agendamentos"
@@ -153,10 +153,11 @@
       "typeVersion": 4,
       "position": [
         -160,
-        784
+        896
       ],
       "id": "0606dd1d-2c02-4ac9-9c2c-fc17b9f7abbb",
-      "name": "Scraper Cron"
+      "name": "Scraper Cron",
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -165,8 +166,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        16,
-        784
+        208,
+        896
       ],
       "id": "72338fad-6fef-4d4b-a602-f7f3534f9c85",
       "name": "Merge Data"
@@ -180,8 +181,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.4,
       "position": [
-        1360,
-        832
+        1408,
+        928
       ],
       "id": "c15c03ae-197e-4bc4-a0b4-510e357b1b1b",
       "name": "Atualizar Status Agendamento",
@@ -221,7 +222,7 @@
       "typeVersion": 2,
       "position": [
         240,
-        1024
+        1136
       ],
       "id": "51155907-8ca4-41df-affd-a86ee4ef8d3f",
       "name": "Normaliza URL Imagem"
@@ -236,7 +237,7 @@
       "typeVersion": 2.4,
       "position": [
         -880,
-        848
+        960
       ],
       "id": "4aa19fea-f23b-4666-8be0-c364f2aaf3ea",
       "name": "Buscar links agendados",
@@ -257,7 +258,7 @@
       "typeVersion": 3,
       "position": [
         1168,
-        1024
+        1136
       ],
       "id": "c6451e47-76d9-4a58-90d9-991ff44b509b",
       "name": "Loop envio mensagens"
@@ -270,7 +271,7 @@
       "typeVersion": 2,
       "position": [
         784,
-        1024
+        1136
       ],
       "id": "a6283666-fc37-4998-b1ed-8ee093d8251b",
       "name": "Parse na saida da IA"
@@ -284,7 +285,7 @@
       "typeVersion": 3,
       "position": [
         960,
-        1024
+        1136
       ],
       "id": "482d2e6a-32fa-40ad-b939-c30ee38296e0",
       "name": "Dividi as mensagens da IA"
@@ -294,8 +295,8 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        1744,
-        1008
+        1648,
+        1136
       ],
       "id": "ec0fc8a7-256b-4c64-910f-16db02ef6145",
       "name": "Delay",
@@ -308,8 +309,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        176,
-        784
+        400,
+        896
       ],
       "id": "5ff4724e-9c52-4096-81fd-24d2a87221e4",
       "name": "Delay scrape"
@@ -371,7 +372,7 @@
       "typeVersion": 1,
       "position": [
         1408,
-        1024
+        1136
       ],
       "id": "619bffb3-bda3-4038-aeef-7406ee937c0b",
       "name": "Enviar para o grupo",
@@ -394,8 +395,8 @@
       "type": "n8n-nodes-evolution-api.evolutionApi",
       "typeVersion": 1,
       "position": [
-        1568,
-        1232
+        1536,
+        1344
       ],
       "id": "db31238b-3333-4824-a1d0-ed3b34904f39",
       "name": "Enviar mensagem erro",
@@ -416,7 +417,7 @@
       "typeVersion": 1,
       "position": [
         -176,
-        1024
+        1136
       ],
       "id": "67faee7c-1636-4879-90d8-255e8428a78b",
       "name": "Agregar dados"
@@ -450,7 +451,7 @@
       "typeVersion": 2,
       "position": [
         32,
-        1024
+        1136
       ],
       "id": "cfd61b8d-5291-4c38-9cf7-a5e44bc82259",
       "name": "Calcular Desconto"
@@ -504,7 +505,7 @@
       "typeVersion": 3.1,
       "position": [
         432,
-        1024
+        1136
       ],
       "id": "3b86f123-5e38-43b9-8348-9ad1749dd5d0",
       "name": "IA formatadora",
@@ -539,7 +540,7 @@
       "typeVersion": 2.3,
       "position": [
         -672,
-        848
+        960
       ],
       "id": "084d86a5-7dfd-4456-a7b5-19ebb4a28a7e",
       "name": "Tem agendamentos?"
@@ -565,7 +566,8 @@
           "id": "EQxneV000GnP2JfI",
           "name": "Evolution account"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -588,7 +590,8 @@
           "id": "EQxneV000GnP2JfI",
           "name": "Evolution account"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -611,19 +614,20 @@
           "id": "EQxneV000GnP2JfI",
           "name": "Evolution account"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
         "content": "## FLUXO DE GERAÇÃO DE ANÚNCIOS POR AGENDAMENTO",
-        "height": 992,
+        "height": 1136,
         "width": 3392,
         "color": 5
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
         -1136,
-        752
+        720
       ],
       "typeVersion": 1,
       "id": "b5253a4d-c6e1-45d9-9e51-62951eea4a67",
@@ -657,7 +661,7 @@
       "typeVersion": 3.1,
       "position": [
         432,
-        1296
+        1408
       ],
       "id": "6e493575-5bba-4a7a-b716-9db40c551e1b",
       "name": "IA formatadora fallback",
@@ -676,7 +680,7 @@
       "typeVersion": 1,
       "position": [
         784,
-        1200
+        1312
       ],
       "id": "407697d8-1c70-4bb7-a1f4-b651adb6795f",
       "name": "Mensagem alerta Eliezer1",
@@ -699,7 +703,7 @@
       "typeVersion": 1,
       "position": [
         784,
-        1392
+        1504
       ],
       "id": "ab9feddc-3e9a-43db-84e1-ca3cc441aef1",
       "name": "Mensagem alerta Nádia1",
@@ -722,7 +726,7 @@
       "typeVersion": 1,
       "position": [
         784,
-        1568
+        1680
       ],
       "id": "49f7843e-ba3c-4a1e-94b4-0ac62e877143",
       "name": "Mensagem alerta Pedro1",
@@ -748,7 +752,7 @@
       "typeVersion": 1.2,
       "position": [
         -1072,
-        848
+        960
       ],
       "id": "4279b956-a69a-43e7-9b49-c1818f9862ce",
       "name": "Schedule Trigger Enviar Anúncios"
@@ -820,7 +824,7 @@
       "typeVersion": 1,
       "position": [
         384,
-        1488
+        1600
       ],
       "id": "81d3e2ff-d1ad-41e2-a5c4-253ef47155ba",
       "name": "Bot formatador modelo 2.5 flash lite",
@@ -842,7 +846,7 @@
       "typeVersion": 1,
       "position": [
         256,
-        1216
+        1328
       ],
       "id": "15edde76-119b-4e74-a812-608c33927b0c",
       "name": "Bot formatador modelo 3.1 flash lite",
@@ -1298,7 +1302,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const text =\n  $json.body?.message ||\n  $json.message ||\n  $json.text ||\n  '';\n\n// Regex genérica para URLs\nconst urlRegex = /(https?:\\/\\/[^\\s]+)/g;\nconst urls = text.match(urlRegex);\n\n// Se não tiver URL\nif (!urls || urls.length === 0) {\n  return [\n    {\n      json: {\n        hasUrl: false,\n        cupom: null,\n        desconto: null\n      }\n    }\n  ];\n}\n\n// Domínios permitidos (afiliados)\nconst allowedPatterns = [\n  /^https?:\\/\\/(www\\.)?amzn\\.to\\/.+/i,\n  /^https?:\\/\\/(www\\.)?meli\\.la\\/.+/i,\n  /^https?:\\/\\/(www\\.)?mercadolivre\\.com\\/sec\\/.+/i,\n  /^https?:\\/\\/(www\\.)?amazon\\.com\\.br\\/dp\\/[A-Z0-9]+/i\n];\n\n// Procura URL válida\nconst validUrl = urls.find(url =>\n  allowedPatterns.some(pattern => pattern.test(url))\n);\n\n// 🔎 Detectar CUPOM\nlet cupom = null;\n\nconst cupomRegex = /\\b(?:cupom|codigo|código)\\s*:?\\s*([a-z0-9\\-]+)/i;\nconst cupomMatch = text.match(cupomRegex);\n\nif (cupomMatch && cupomMatch[1]) {\n  cupom = cupomMatch[1].toUpperCase();\n}\n\n// 🔎 Detectar DESCONTO\nlet desconto = null;\n\n// primeiro tenta percentual\nconst percentMatch = text.match(/(\\d+(?:[.,]\\d+)?)\\s*%/);\n\nif (percentMatch) {\n  desconto = percentMatch[1] + \"%\";\n} else {\n  // tenta número solto (ex: \"desconto 12\")\n  const numberMatch = text.match(/\\b(?:desconto|off|descontar|desc)\\s*(\\d+(?:[.,]\\d+)?)/i);\n  if (numberMatch) {\n    desconto = parseFloat(numberMatch[1].replace(\",\", \".\"));\n  }\n}\n\n// Se não tiver URL válida\nif (!validUrl) {\n  return [\n    {\n      json: {\n        hasUrl: false,\n        cupom,\n        desconto\n      }\n    }\n  ];\n}\n\n// Retorno final\nreturn [\n  {\n    json: {\n      hasUrl: true,\n      url: validUrl,\n      cupom,\n      desconto\n    }\n  }\n];"
+        "jsCode": "const text =\n  $json.body?.message ||\n  $json.message ||\n  $json.text ||\n  '';\n\n// Regex genérica para URLs\nconst urlRegex = /(https?:\\/\\/[^\\s]+)/g;\nconst urls = text.match(urlRegex);\n\n// Se não tiver URL\nif (!urls || urls.length === 0) {\n  return [\n    {\n      json: {\n        hasUrl: false,\n        cupom: null,\n        desconto: null\n      }\n    }\n  ];\n}\n\n// Domínios permitidos (afiliados)\nconst allowedPatterns = [\n  /^https?:\\/\\/(www\\.)?amzn\\.to\\/.+/i,\n  /^https?:\\/\\/(www\\.)?meli\\.la\\/.+/i,\n  /^https?:\\/\\/(www\\.)?mercadolivre\\.com\\/sec\\/.+/i,\n  /^https?:\\/\\/(www\\.)?amazon\\.com\\.br\\/dp\\/[A-Z0-9]+/i,\n  /^https?:\\/\\/(www\\.)?link\\.amazon\\/.+/i\n];\n\n// Procura URL válida\nconst validUrl = urls.find(url =>\n  allowedPatterns.some(pattern => pattern.test(url))\n);\n\n// 🔎 Detectar CUPOM\nlet cupom = null;\n\nconst cupomRegex = /\\b(?:cupom|codigo|código)\\s*:?\\s*([a-z0-9\\-]+)/i;\nconst cupomMatch = text.match(cupomRegex);\n\nif (cupomMatch && cupomMatch[1]) {\n  cupom = cupomMatch[1].toUpperCase();\n}\n\n// 🔎 Detectar DESCONTO\nlet desconto = null;\n\n// primeiro tenta percentual\nconst percentMatch = text.match(/(\\d+(?:[.,]\\d+)?)\\s*%/);\n\nif (percentMatch) {\n  desconto = percentMatch[1] + \"%\";\n} else {\n  // tenta número solto (ex: \"desconto 12\")\n  const numberMatch = text.match(/\\b(?:desconto|off|descontar|desc)\\s*(\\d+(?:[.,]\\d+)?)/i);\n  if (numberMatch) {\n    desconto = parseFloat(numberMatch[1].replace(\",\", \".\"));\n  }\n}\n\n// Se não tiver URL válida\nif (!validUrl) {\n  return [\n    {\n      json: {\n        hasUrl: false,\n        cupom,\n        desconto\n      }\n    }\n  ];\n}\n\n// Retorno final\nreturn [\n  {\n    json: {\n      hasUrl: true,\n      url: validUrl,\n      cupom,\n      desconto\n    }\n  }\n];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1622,7 +1626,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        16,
+        80,
         544
       ],
       "id": "f44224f3-866e-4c57-9acb-082a9310d9ee",
@@ -1718,6 +1722,62 @@
       ],
       "id": "ccf34774-bb96-4f9b-ae17-703d032349a2",
       "name": "Switch"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "=CompraInteligente",
+        "remoteJid": "={{ $('Loop de Agendamentos').item.json.chatId }}",
+        "messageText": "=Erro ao fazer o web scraping ❌",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        208,
+        736
+      ],
+      "id": "d25a75cc-354f-41ba-bdaf-ee1a7b838afe",
+      "name": "Enviar mensagem erro1",
+      "credentials": {
+        "evolutionApi": {
+          "id": "EQxneV000GnP2JfI",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "675dfc06-17c8-42e6-b270-14666640ddcd",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "error",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        16,
+        896
+      ],
+      "id": "9bad2b0f-9f29-4962-83fe-dbf98afcad7a",
+      "name": "Web scrapping Ok?"
     }
   ],
   "pinData": {},
@@ -1782,7 +1842,14 @@
       "main": [
         [
           {
-            "node": "Merge Data",
+            "node": "Web scrapping Ok?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enviar mensagem erro1",
             "type": "main",
             "index": 0
           }
@@ -2464,6 +2531,24 @@
           }
         ]
       ]
+    },
+    "Web scrapping Ok?": {
+      "main": [
+        [
+          {
+            "node": "Merge Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enviar mensagem erro1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
@@ -2471,7 +2556,7 @@
     "executionOrder": "v1",
     "availableInMCP": false
   },
-  "versionId": "8fed8742-55f7-4d18-aca1-de92fe202803",
+  "versionId": "3248c572-c1bb-4eb0-bd13-7c99a5cce70f",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "e6a24315ab2eaf3c63ae9063c37dc032da24f45c18732d264b5ecb00e37d096f"
