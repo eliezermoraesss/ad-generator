@@ -1,666 +1,357 @@
-# N8N AD Generator Automation
+# 🚀 Ad Generator — Automação de Ofertas com IA, n8n e WhatsApp
 
-Documentação completa da automação de WhatsApp com n8n, Evolution API e web scraping para geração de anúncios.
-
----
-
-## 📋 Visão Geral da Arquitetura
-
-Este projeto utiliza Docker Compose para orquestrar uma stack completa de automação que integra:
-- **n8n**: Plataforma de automação de workflows
-- **Evolution API**: API de integração com WhatsApp
-- **Scraper**: Serviço de web scraping (FastAPI + Playwright)
-- **PostgreSQL**: Banco de dados para Evolution API
-- **Redis**: Cache e fila de mensagens (dois serviços)
-- **Waha**: Alternativa WhatsApp (opcional)
-
-**Localização**: `E:\N8N Waha Local`  
-**Docker Compose Version**: 5.1.4  
-**Project Name**: `n8nwahalocal`
+Solução completa de engenharia e automação de processos voltada para operações de afiliados, transformando a coleta, estruturação, copywriting com Inteligência Artificial e distribuição de ofertas em um fluxo automatizado, escalável e de alta conversão.
 
 ---
 
-## 🐳 Containers e Configurações
+## 📌 Sobre o Projeto
 
-### 1. **n8n** (Workflow Automation)
+### O Contexto e a Dor de Negócio
 
-#### Visão Geral
-Plataforma de automação de low-code que orquestra todo o fluxo de geração de anúncios, integração com WhatsApp e web scraping.
+No mercado de marketing de afiliados (Mercado Livre, Amazon, Shopee e outros grandes marketplaces), o faturamento está diretamente correlacionado à velocidade e constância na publicação de promoções, cupons e oportunidades.
 
-#### Informações Técnicas
-- **Imagem**: `n8nio/n8n:latest`
-- **Container Name**: `n8n`
-- **Porta**: `5678` (localhost:5678)
-- **URL de Acesso**: `https://aerodynamically-bibliomaniacal-mervin.ngrok-free.dev`
-- **Versão**: 2.3.5
-- **DHI Compliance**: Sim (Docker Hardened Image - Node.js 22 Alpine)
+No entanto, o processo tradicional é estritamente manual e repetitivo. Para publicar uma única oferta, o operador precisa:
 
-#### Variáveis de Ambiente
-```yaml
-N8N_HOST: aerodynamically-bibliomaniacal-mervin.ngrok-free.dev
-N8N_PROTOCOL: https
-N8N_PORT: 5678
-N8N_LOG_LEVEL: debug
-N8N_SECURE_COOKIE: false
-WEBHOOK_URL: https://aerodynamically-bibliomaniacal-mervin.ngrok-free.dev
-GENERIC_TIMEZONE: America/Sao_Paulo
-N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE: true
+1. Encontrar o produto em promoção.
+2. Acessar o marketplace e validar os preços (atual vs. original).
+3. Coletar o nome do produto e a imagem principal.
+4. Conferir a existência de cupons ativos e regras de frete.
+5. Gerar e anexar o link de afiliado.
+6. Redigir manualmente um texto persuasivo (copy) com emojis e formatação adequada.
+7. Publicar a imagem e o texto em dezenas de grupos e canais no WhatsApp ou Telegram.
+
+Esse fluxo gera um forte gargalo operacional: **para aumentar o faturamento, é necessário aumentar o trabalho braçal na mesma proporção**.
+
+### A Solução
+
+O **Ad Generator** transforma essa rotina manual em um pipeline automatizado de ponta a ponta:
+
+```text
+Link → Scraping → Processamento → IA → Oferta Formatada → WhatsApp
 ```
 
-#### Volumes
-- `n8n_data:/home/node/.n8n` - Armazena workflows, credenciais e dados de configuração
+| Modelo                          | Fluxo de Ação                                                                                      |
+| :------------------------------ | :--------------------------------------------------------------------------------------------------- |
+| **Antes (Manual)**        | Pesquisar → Copiar → Formatar → Criar texto → Editar → Copiar imagem → Publicar                |
+| **Depois (Ad Generator)** | **Fornecer o link → Processamento automático → Oferta gerada → Distribuição multicanal** |
 
-#### Dependências
-- Depende do serviço **scraper** para iniciar
+### Destaques e Capacidades do Sistema
 
-#### Uso
-1. Acesse: `https://aerodynamically-bibliomaniacal-mervin.ngrok-free.dev`
-2. Configure seus workflows de geração de anúncios
-3. Configure credenciais para Evolution API e outros serviços
+- **Suporte Específico para Marketplaces:** Tratamento dedicado para **Mercado Livre** e **Amazon**, identificando variações de layout, seletores dinâmicos e regras de extração.
+- **Normalização de URLs e Links:** Tratamento robusto de URLs encurtadas, links diretos de afiliados e parâmetros de rastreamento.
+- **Tratamento Automático de Imagens:** Normalização de formatos incompatíveis (como WEBP e PNG) convertendo-os para JPG padronizado antes do disparo.
+- **Detecção Estruturada de Cupons:** Extração e parsing de cupons de desconto diretamente do conteúdo ou mensagem de entrada, repassando-os estruturados para a IA.
+- **Processamento de Múltiplos Produtos (Lote):** Capacidade de receber listas de links e processá-los de forma sequencial com controle de taxa (*rate limiting*) e agregação inteligente de chamadas.
+- **Checkpoints e Tratamento de Erros:** Rastreamento do ciclo de vida da requisição (desde o carregamento do DOM até a geração final da mensagem), facilitando diagnóstico e reexecução.
 
-#### Logs
-```bash
-docker compose logs -f n8n
-```
+### Evolução Profissional e Engenharia
+
+Mais do que utilizar diversas ferramentas isoladas, este projeto consolidou conceitos arquiteturais essenciais:
+
+- Integração modular entre APIs REST e serviços heterogêneos.
+- Web scraping resiliente com automação headless (Playwright).
+- Orquestração de workflows de dados e lógica condicional com n8n.
+- Persistência relacional (PostgreSQL) e cache de alta performance (Redis).
+- Containerização e padronização de ambientes com Docker e Docker Compose.
+- Engenharia de prompts com IA para copywriting orientado a conversão, eliminando alucinações e mantendo fidelidade aos dados reais do produto.
 
 ---
 
-### 2. **Evolution API** (WhatsApp Integration)
+## 🧩 Como Funciona
 
-#### Visão Geral
-API robusta para integração com WhatsApp, gerenciando instâncias, mensagens, contatos e eventos em tempo real.
+### Visão Geral da Arquitetura
 
-#### Informações Técnicas
-- **Imagem**: `evoapicloud/evolution-api:latest`
-- **Container Name**: `evolution_api`
-- **Porta**: `8080` (localhost:8080)
-- **Versão**: Latest
-- **Banco**: PostgreSQL 15 (host.docker.internal:5436)
-- **Cache**: Redis (host.docker.internal:6380)
+Um dos pilares do projeto é a **separação clara de responsabilidades**: o orquestrador não deve executar tarefas pesadas de renderização de navegador, assim como os coletores não devem cuidar de regras de negócio ou de mensageria.
 
-#### Configurações Principais
-
-##### API Authentication
-- **API Key**: `9F2D1B7A6C8E4F2E9A7C0B5D1E3F8A6D`
-- **Exposição em Fetch Instances**: Habilitada
-
-##### Webhooks (Habilitados)
-- `WEBHOOK_EVENTS_SEND_MESSAGE`: true
-- `WEBHOOK_EVENTS_MESSAGES_UPSERT`: true
-- `WEBHOOK_EVENTS_MESSAGES_UPDATE`: true
-- `WEBHOOK_EVENTS_MESSAGES_DELETE`: true
-- `WEBHOOK_EVENTS_CONTACTS_UPSERT`: true
-- `WEBHOOK_EVENTS_CONTACTS_SET`: true
-- `WEBHOOK_EVENTS_CHATS_UPSERT`: true
-- `WEBHOOK_EVENTS_CHATS_UPDATE`: true
-- `WEBHOOK_EVENTS_CONNECTION_UPDATE`: true
-- `WEBHOOK_EVENTS_QRCODE_UPDATED`: true
-- **Timeout de Webhook**: 60000ms
-- **Max Tentativas**: 10
-- **Delay Inicial**: 5 segundos
-
-##### Pusher Events (Habilitados)
-- Eventos em tempo real de mensagens, contatos, chats e conexão
-
-##### Database
 ```
-Provider: PostgreSQL
-Host: host.docker.internal:5436
-User: user
-Password: pass
-Database: evolution_db
-Client Name: evolution_exchange
-Connection URI: postgresql://user:[REDACTED]@host.docker.internal:5436/evolution_db?schema=evolution_api
-```
-
-##### Redis Cache
-```
-Host: host.docker.internal:6380
-Database: 6
-TTL: 604800 segundos (7 dias)
-Prefix: evolution
-Salvar Instâncias: false
-```
-
-##### Configurações Adicionais
-- **Timezone**: America/Sao_Paulo
-- **Linguagem**: en (Inglês)
-- **Log Level**: ERROR, WARN, DEBUG, INFO, LOG, VERBOSE, DARK, WEBHOOKS, WEBSOCKET
-- **QR Code Color**: #175197
-- **QR Code Limit**: 30
-- **Session Phone**: Chrome
-- **Server URL**: http://localhost:8080
-- **Server Port**: 8080
-- **CORS Origin**: * (Todos os domínios)
-
-##### Features Desabilitadas
-- Chatwoot
-- Typebot
-- OpenAI
-- Dify
-- RabbitMQ
-- S3 Storage
-- Sentry
-- Websocket Global Events
-
-#### Volumes
-- `evolution_instances:/evolution/instances` - Armazena dados das instâncias WhatsApp
-
-#### Dependências
-- Postgres Evolution
-- Redis Evolution
-
-#### API Endpoints Principais
-```
-GET  /instances
-POST /instances/create
-GET  /instances/{instanceName}
-DELETE /instances/{instanceName}
-POST /message/sendText
-POST /message/sendMedia
-GET  /chats/{instanceName}
-GET  /contacts/{instanceName}
-```
-
-#### Logs
-```bash
-docker compose logs -f evolution-api
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│                                   ENTRADA                                        │
+│          WhatsApp (Mensagem) / Webhook n8n / Disparo em Lote de URLs             │
+└────────────────────────────────────────┬─────────────────────────────────────────┘
+                                         │
+                                         ▼
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│                                   n8n (5678)                                     │
+│                     Orquestrador de Workflows & Regras                           │
+└──────────────┬────────────────────────────────────────────────────┬──────────────┘
+               │ (Chama API de Scraping)                            │
+               ▼                                                    │
+┌──────────────────────────────┐                                    │
+│   Scraper (FastAPI + 8000)   │                                    │
+│   Playwright Headless Engine │                                    │
+│   • Mercado Livre / Amazon   │                                    │
+│   • Normalização de imagens  │                                    │
+│   • Checkpoints de execução  │                                    │
+└──────────────┬───────────────┘                                    │
+               │ (Retorna JSON com dados)                           │
+               ▼                                                    │
+┌──────────────────────────────┐                                    │
+│ Inteligência Artificial (IA) │                                    │
+│ • Copywriting promocional    │                                    │
+│ • Formatação WhatsApp        │                                    │
+│ • Destaque de cupom e preço  │                                    │
+└──────────────┬───────────────┘                                    │
+               │ (Oferta pronta)                                    │
+               └───────────────────────┬────────────────────────────┘
+                                       │
+                                       ▼
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│                           Evolution API / WAHA (8080)                            │
+│                       Gateway de Mensageria WhatsApp                             │
+└──────────────────────────────────────┬───────────────────────────────────────────┘
+                                       │ (Disparo de Imagem + Texto)
+                                       ▼
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│                   Grupos, Comunidades e Canais de Afiliados                      │
+└──────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-### 3. **PostgreSQL Evolution** (Database)
+### Componentes e Papel de Cada Tecnologia
 
-#### Visão Geral
-Banco de dados relacional PostgreSQL versão 15 dedicado aos dados da Evolution API.
+| Componente                 | Tecnologia                      | Responsabilidade Principal                                                                                                                               |
+| :------------------------- | :------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Orquestrador**     | `n8n`                         | Recebe as entradas, direciona o fluxo, coordena as chamadas HTTP, gerencia os checkpoints e bifurcações (ex: produto com imagem vs. sem imagem).       |
+| **API de Coleta**    | `Python + FastAPI`            | Expõe endpoints REST internos (`/scrape`, `/health`) com tipagem, documentação Swagger e controle assíncrono.                                    |
+| **Automação Web**  | `Playwright`                  | Inicializa navegadores Chromium headless, executa espera explícita por elementos (`domcontentloaded`, seletores de preço/título) e contorna SPAs.   |
+| **Copywriting**      | `Inteligência Artificial`    | Processa o JSON estruturado do produto e produz a mensagem final de vendas, aplicando técnicas de persuasão, gatilhos de urgência e links rastreados. |
+| **Gateway WhatsApp** | `Evolution API` *(ou WAHA)* | Conecta instâncias do WhatsApp via QR Code/Webhook, provendo envio de mensagens de texto, mídias e tratamento de eventos em tempo real.                |
+| **Cache & Filas**    | `Redis`                       | Garante controle de taxa de requisições, idempotência (evitando envio repetido de ofertas) e cache de sessões da API do WhatsApp.                    |
+| **Banco de Dados**   | `PostgreSQL`                  | Persistência das instâncias do WhatsApp, histórico de publicações, logs de requisições e métricas da operação.                                 |
+| **Infraestrutura**   | `Docker Compose`              | Padroniza e isola toda a stack em containers conectados por uma rede interna unificada (`evolution_n8n_net`).                                          |
 
-#### Informações Técnicas
-- **Imagem**: `postgres:15`
-- **Container Name**: `postgres_evolution`
-- **Porta**: `5436` (localhost:5436 → 5432 interno)
-- **Versão**: 15.15
+---
 
-#### Configurações de Conexão
-```yaml
-POSTGRES_USER: user
-POSTGRES_PASSWORD: pass
-POSTGRES_DB: evolution_db
-POSTGRES_HOST_AUTH_METHOD: trust
-```
+## ⚙️ Operacional
 
-#### Otimizações
-```bash
-max_connections=200           # Máximo de conexões simultâneas
-listen_addresses=*            # Escuta em todas as interfaces
-shared_buffers=256MB          # Buffer compartilhado
-effective_cache_size=1GB      # Cache efetivo
-work_mem=4MB                  # Memória por operação
-```
+### 1. Fluxo de Operação no Dia a Dia
 
-#### Volumes
-- `postgres_evolution_data:/var/lib/postgresql/data` - Dados persistentes
-
-#### String de Conexão
-```
-postgresql://user:[REDACTED]@host.docker.internal:5436/evolution_db?schema=evolution_api
-```
-
-#### Backup
-```bash
-# Fazer backup
-docker exec postgres_evolution pg_dump -U user evolution_db > backup.sql
-
-# Restaurar backup
-docker exec -i postgres_evolution psql -U user evolution_db < backup.sql
-```
-
-#### Logs
-```bash
-docker compose logs -f postgres-evolution
+```text
+[1. ENTRADA]      Operador envia o link (ou lote de links) via WhatsApp ou dispara o Webhook do n8n.
+       │
+[2. PARSER]       O n8n identifica a URL, extrai parâmetros e detecta o marketplace (Mercado Livre, Amazon, etc.).
+       │
+[3. SCRAPING]     Requisição POST enviada para o Scraper (FastAPI:8000).
+                  O Playwright abre o link, aguarda os elementos de preço/título e retorna o JSON estruturado.
+       │
+[4. VALIDAÇÃO]    Checkpoint no n8n: se houver falha na extração ou bloqueio, registra log e notifica o administrador.
+       │
+[5. IMAGEM]       Download e normalização automática da imagem do produto (conversão de WEBP/PNG para JPG).
+       │
+[6. IA COPY]      A IA recebe os dados exatos (título, preço anterior, preço atual, cupom, frete, link) e gera a copy persuasiva.
+       │
+[7. BANCO/CACHE]  Verificação de duplicidade no Redis e registro do histórico no PostgreSQL.
+       │
+[8. DISPARO]      Evolution API envia a imagem com a legenda formatada diretamente para os grupos/canais de WhatsApp configurados.
 ```
 
 ---
 
-### 4. **Redis Evolution** (Cache - Evolution API)
+### 2. Checkpoints de Execução e Diagnóstico
 
-#### Visão Geral
-Cache Redis dedicado aos dados de sessão e cache da Evolution API com persistência AOF.
+Durante o ciclo de vida do scraping, o serviço emite checkpoints detalhados no log para facilitar a identificação imediata de instabilidades ou alterações de seletores nos e-commerces:
 
-#### Informações Técnicas
-- **Imagem**: `redis:latest`
-- **Container Name**: `redis_evolution`
-- **Porta**: `6380` (localhost:6380 → 6379 interno)
-- **Database**: 6
-
-#### Configurações
-```yaml
-Command: redis-server --port 6379 --appendonly yes
-```
-
-#### Variáveis de Ambiente (Evolution API)
-- `CACHE_REDIS_ENABLED`: true
-- `CACHE_REDIS_URI`: redis://host.docker.internal:6380/6
-- `CACHE_REDIS_PREFIX_KEY`: evolution
-- `CACHE_REDIS_TTL`: 604800 (7 dias)
-
-#### Volumes
-- `redis_evolution_data:/data` - Dados persistentes com AOF
-
-#### Limpeza de Cache
-```bash
-# Conectar ao Redis
-docker exec -it redis_evolution redis-cli -p 6379
-
-# Dentro do Redis CLI
-SELECT 6
-FLUSHDB              # Limpar banco atual
-KEYS *               # Listar todas as chaves
-DEL chave            # Deletar chave específica
-```
-
-#### Logs
-```bash
-docker compose logs -f redis-evolution
+```text
+[CHECKPOINT] start
+[CHECKPOINT] playwright_started
+[CHECKPOINT] browser_launched
+[CHECKPOINT] before_goto
+[CHECKPOINT] after_goto
+[CHECKPOINT] mercado_livre_detected (ou amazon_detected)
+[CHECKPOINT] domcontentloaded
+[CHECKPOINT] after_wait_title
+[CHECKPOINT] data_extracted_success
 ```
 
 ---
 
-### 5. **Redis (n8n)** (Cache - N8N)
+### 3. Estrutura de Arquivos do Projeto
 
-#### Visão Geral
-Instância Redis separada para cache e fila de n8n com autenticação.
-
-#### Informações Técnicas
-- **Imagem**: `redis:latest`
-- **Container Name**: `n8nwahalocal-redis-1`
-- **Porta**: `6379` (localhost:6379)
-- **Plataforma**: linux/amd64
-
-#### Configurações
-```yaml
-Command: redis-server --requirepass default
-REDIS_USER: default
-REDIS_PASSWORD: default
 ```
+E:\N8N Waha Local
+├── AdGenerator_v4.json              # Workflow n8n v4
+├── AdGenerator_v5.json              # Workflow n8n v5 (com suporte a IA e lotes)
+├── Bom dia AdGenerator.json        # Workflow de engajamento diário
+├── Status Servidor AdGenerator.json # Monitoramento de saúde dos containers
+├── descritivo-tecnico-comercial.md  # Detalhamento de produto e proposta comercial
+├── docker-compose.yml               # Definição e orquestração de todos os containers
+├── .env                             # Variáveis de ambiente e credenciais
+├── scraper/                         # Serviço de Web Scraping em Python
+│   ├── Dockerfile
+│   ├── app.py                      # Aplicação FastAPI + Playwright
+│   └── requirements.txt            # Dependências Python
+└── assets/                          # Imagens e recursos visuais
 
-#### Uso
-- Suporte a workflows paralelos em n8n
-- Cache de dados de execução
-
-#### Logs
-```bash
-docker compose logs -f redis
 ```
 
 ---
 
-### 6. **Scraper** (Web Scraping Service)
+### 4. Configuração das Variáveis de Ambiente (`.env`)
 
-#### Visão Geral
-Serviço Python FastAPI + Playwright para web scraping de dados para geração de anúncios. Compilado localmente a partir do Dockerfile.
+Crie e mantenha o arquivo `.env` na raiz do projeto configurando as credenciais dos serviços:
 
-#### Informações Técnicas
-- **Imagem**: `n8nwahalocal-scraper` (build local)
-- **Container Name**: `scraper`
-- **Porta**: `8000` (localhost:8000)
-- **Linguagem**: Python
-- **Framework**: FastAPI
-- **Browser Automation**: Playwright
-- **Plataforma Base**: Ubuntu 22.04
+```env
+# ==========================================
+# n8n Orchestrator
+# ==========================================
+N8N_HOST=localhost
+N8N_PORT=5678
+N8N_PROTOCOL=http
+WEBHOOK_URL=http://localhost:5678/
+GENERIC_TIMEZONE=America/Sao_Paulo
+N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
 
-#### Variáveis de Ambiente
-```yaml
-PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
-PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-LANG: C.UTF-8
-LC_ALL: C.UTF-8
+# ==========================================
+# Scraper Service (Python / FastAPI)
+# ==========================================
+SCRAPER_PORT=8000
+PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+
+# ==========================================
+# Evolution API (WhatsApp)
+# ==========================================
+EVOLUTION_PORT=8080
+AUTHENTICATION_API_KEY=9F2D1B7A6C8E4F2E9A7C0B5D1E3F8A6D
+SERVER_URL=http://localhost:8080
+
+# ==========================================
+# PostgreSQL Database (Evolution API)
+# ==========================================
+POSTGRES_USER=user
+POSTGRES_PASSWORD=pass
+POSTGRES_DB=evolution_db
+POSTGRES_PORT=5436
+
 ```
 
-#### Estrutura de Diretórios (./scraper)
-```
-scraper/
-├── Dockerfile
-├── app.py              # Aplicação FastAPI
-├── requirements.txt
-└── .../
 ```
 
-#### Endpoints Principais
-Documentação disponível em: `http://localhost:8000/docs`
-
-Exemplos:
-```bash
-# Health check
-GET /health
-
-# Scraping endpoint (exemplo)
-POST /scrape
-{
-  "url": "https://exemplo.com",
-  "selectors": ["h1", ".price"]
-}
-```
-
-#### Build Local
-```bash
-docker compose build scraper
-
-# Rebuild sem cache
-docker compose build --no-cache scraper
-```
-
-#### Logs
-```bash
-docker compose logs -f scraper
-```
-
-#### Troubleshooting
-Se o Playwright falhar ao instalar browsers:
-```bash
-# Reinstalar browsers
-docker compose exec scraper playwright install
+# ==========================================
+# Redis Cache
+# ==========================================
+REDIS_N8N_PORT=6379
+REDIS_EVOLUTION_PORT=6380
 ```
 
 ---
 
-### 7. **Waha** (WhatsApp Alternative - Opcional)
+### 5. Guia de Execução da Infraestrutura
 
-#### Visão Geral
-Engine alternativo WhatsApp usando Waha (Web API For WhatsApp). Pode ser usado como alternativa ou complemento à Evolution API.
+#### Iniciar todos os serviços
 
-#### Informações Técnicas
-- **Imagem**: `devlikeapro/waha:latest`
-- **Porta**: `3000`
-- **Plataforma**: linux/amd64
-
-#### Configurações
-```yaml
-WHATSAPP_HOOK_URL: https://aerodynamically-bibliomaniacal-mervin.ngrok-free.dev:5678/webhook/webhook
-WHATSAPP_DEFAULT_ENGINE: GOWS
-WHATSAPP_HOOK_EVENTS: message
-WAHA_NO_API_KEY: true
-WAHA_DASHBOARD_NO_PASSWORD: true
-WHATSAPP_SWAGGER_NO_PASSWORD: true
-```
-
-#### Volumes
-- `waha_sessions:/app/.sessions` - Sessões WhatsApp
-- `waha_media:/app/.media` - Mídia armazenada
-
-#### Status
-Atualmente definido como comentado (não ativo). Para ativar, remova os comentários do docker-compose.yml
-
-#### Logs
 ```bash
-docker compose logs -f waha
-```
-
----
-
-## 🔌 Networking
-
-### Bridge Network: `evolution_n8n_net`
-Conecta os serviços principais para comunicação interna:
-- n8n
-- evolution-api
-- postgres-evolution
-- redis-evolution
-- scraper
-
-### DNS Interno
-Dentro da rede, os serviços podem ser acessados por nome:
-- `http://evolution_api:8080`
-- `http://scraper:8000`
-- `http://n8n:5678`
-- `postgresql://postgres_evolution:5432`
-- `redis://redis_evolution:6379`
-
-### Host Access
-Para acessar do host (Windows):
-- `http://localhost:8080` - Evolution API
-- `http://localhost:8000` - Scraper
-- `http://localhost:5678` - n8n
-- `http://localhost:5436` - PostgreSQL
-- `http://localhost:6380` - Redis Evolution
-- `http://localhost:6379` - Redis n8n
-
----
-
-## 🚀 Operação
-
-### Iniciar Stack Completa
-```bash
-cd E:\N8N Waha Local
+cd "E:\N8N Waha Local"
 docker compose up -d
 ```
 
-### Parar Stack
+#### Verificar status dos containers
+
+```bash
+docker compose ps
+```
+
+#### Acompanhar logs em tempo real
+
+```bash
+# Todos os containers
+docker compose logs -f
+
+# Apenas o orquestrador (n8n)
+docker compose logs -f n8n
+
+# Apenas o serviço de scraping
+docker compose logs -f scraper
+
+# Apenas a Evolution API
+docker compose logs -f evolution_api
+```
+
+#### Rebuild do serviço Scraper após alterações no código
+
+```bash
+docker compose build --no-cache scraper
+docker compose up -d scraper
+```
+
+#### Parar a stack
+
 ```bash
 docker compose down
 ```
 
-### Parar e Remover Volumes
-```bash
-docker compose down -v
-```
+---
 
-### Visualizar Logs
-```bash
-# Todos os serviços
-docker compose logs -f
+## 🐳 Detalhamento dos Containers da Stack
 
-# Serviço específico
-docker compose logs -f n8n
-docker compose logs -f evolution-api
-docker compose logs -f scraper
-```
+### 1. `n8n` — Workflow Automation
 
-### Rebuild de Imagens
-```bash
-# Rebuild scraper (local)
-docker compose build --no-cache scraper
+- **Imagem:** `n8nio/n8n:latest`
+- **Porta Host:** `5678` (`http://localhost:5678`)
+- **Volume:** `n8n_data:/home/node/.n8n`
+- **Função:** Central de inteligência de fluxos, integração de APIs, regras condicionais e interface de monitoramento.
 
-# Rebuild tudo
-docker compose build --no-cache
-```
+### 2. `scraper` — Microserviço de Scraping
 
-### Executar Comandos
-```bash
-# PostgreSQL
-docker compose exec postgres_evolution psql -U user -d evolution_db
+- **Imagem:** Build local a partir de `./scraper` (Python 3.10 + FastAPI + Playwright)
+- **Porta Host:** `8000` (`http://localhost:8000/docs`)
+- **Endpoints:**
+  - `GET /health` — Verificação de saúde da aplicação
+  - `POST /scrape` — Recebe URL e retorna título, preços, cupom e imagem
+- **Função:** Isolamento do processo de renderização e extração de páginas pesadas de e-commerce.
 
-# Redis Evolution
-docker compose exec redis_evolution redis-cli -p 6379
+### 3. `evolution_api` — WhatsApp Gateway
 
-# Redis n8n
-docker compose exec redis redis-cli
+- **Imagem:** `evoapicloud/evolution-api:latest`
+- **Porta Host:** `8080` (`http://localhost:8080`)
+- **Banco:** PostgreSQL 15 (`postgres_evolution`)
+- **Cache:** Redis (`redis_evolution`)
+- **Função:** Gerenciamento de sessões de WhatsApp, QR Code, webhooks de mensagens e envio de mídias.
 
-# Scraper
-docker compose exec scraper bash
-```
+### 4. `postgres_evolution` — Banco de Dados
+
+- **Imagem:** `postgres:15`
+- **Porta Host:** `5436` (mapeada para `5432` interno)
+- **Volume:** `postgres_evolution_data:/var/lib/postgresql/data`
+- **Função:** Persistência relacional das instâncias e mensagens da Evolution API.
+
+### 5. `redis_evolution` — Cache WhatsApp
+
+- **Imagem:** `redis:latest`
+- **Porta Host:** `6380` (mapeada para `6379` interno)
+- **Função:** Sessões ativas e cache da Evolution API.
+
+### 6. `redis` — Cache do n8n
+
+- **Imagem:** `redis:latest`
+- **Porta Host:** `6379`
+- **Função:** Gerenciamento de filas de execução e estado para o n8n.
 
 ---
 
-## 📊 Fluxo de Dados
+## 🔌 Networking Interno
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                         n8n (5678)                              │
-│                   Workflow Orchestration                         │
-└──────────────┬────────────────────────────────┬──────────────────┘
-               │                                │
-               v                                v
-        ┌─────────────────┐           ┌──────────────────┐
-        │  Scraper (8000) │           │ Evolution API    │
-        │  Web Scraping   │           │    (8080)        │
-        │  + Processing   │           │ WhatsApp Mgmt    │
-        └────────┬────────┘           └────────┬─────────┘
-                 │                             │
-                 │    ┌──────────────────────┬─┴─┐
-                 │    │                      │   │
-                 v    v                      v   v
-        ┌────────────────────┐     ┌──────────────────────┐
-        │   Redis n8n        │     │  PostgreSQL Evolution│
-        │   Cache/Queue      │     │  Data Storage        │
-        │   (6379)           │     │  (5436)              │
-        └────────────────────┘     └──────────────────────┘
-                                            ^
-                                            │
-                                   ┌────────┴────────┐
-                                   │ Redis Evolution  │
-                                   │ Cache (6380)     │
-                                   └──────────────────┘
-```
+Todos os containers comunicam-se via bridge network `evolution_n8n_net`, utilizando resolução de nomes DNS interna:
+
+- `http://n8n:5678`
+- `http://scraper:8000`
+- `http://evolution_api:8080`
+- `postgresql://postgres_evolution:5432`
+- `redis://redis_evolution:6379`
 
 ---
 
-## 🔐 Segurança
+## 🔐 Segurança e Boas Práticas
 
-### Senhas e Credenciais (Mudar em Produção)
-```yaml
-PostgreSQL:
-  User: user
-  Password: pass
-
-Redis n8n:
-  Password: default
-
-Evolution API Key: 9F2D1B7A6C8E4F2E9A7C0B5D1E3F8A6D
-```
-
-⚠️ **IMPORTANTE**: Altere todas as senhas padrão em um ambiente de produção!
-
-### Variáveis de Ambiente Sensíveis
-Crie um arquivo `.env` na raiz do projeto:
-```bash
-# .env
-POSTGRES_USER=seu_usuario
-POSTGRES_PASSWORD=sua_senha_forte
-REDIS_PASSWORD=sua_senha_redis
-EVOLUTION_API_KEY=sua_chave_api
-N8N_SECURE_COOKIE=true
-```
-
-### Ngrok (Exposição Segura)
-- URL: `https://aerodynamically-bibliomaniacal-mervin.ngrok-free.dev`
-- Fornece HTTPS para webhooks
-- Substitua com seu próprio tunnel quando necessário
+- **Credenciais em Produção:** Altere as senhas padrão do PostgreSQL, chaves de API da Evolution API e segredos do n8n no arquivo `.env`.
+- **Exposição Pública:** Para receber webhooks externos com HTTPS seguro, utilize túneis como **Ngrok** ou configure um reverse proxy (Nginx / Traefik com SSL Let's Encrypt).
+- **Anti-bloqueio:** Utilize intervalos mínimos entre requisições de scraping para respeitar as políticas de requisição dos marketplaces.
 
 ---
 
-## 🐛 Troubleshooting
+## 📈 Resultados e Benefícios Obtidos
 
-### Container não inicia
-```bash
-# Verificar logs
-docker compose logs n8n
-
-# Verificar saúde
-docker ps -a
-
-# Reinicar container
-docker compose restart n8n
-```
-
-### Erro de Conexão PostgreSQL
-```bash
-# Verificar se PostgreSQL está rodando
-docker compose ps postgres_evolution
-
-# Testar conexão
-docker compose exec postgres_evolution psql -U user -d evolution_db -c "SELECT 1"
-```
-
-### Erro de Redis
-```bash
-# Verificar se Redis está rodando
-docker compose ps redis_evolution
-
-# Limpar dados
-docker compose exec redis_evolution redis-cli -p 6379 FLUSHDB
-```
-
-### Erro no Scraper
-```bash
-# Reinstalar dependências
-docker compose exec scraper pip install -r requirements.txt
-
-# Reinstalar Playwright
-docker compose exec scraper playwright install
-```
-
-### Erro de Memória (Exit Code 137)
-```bash
-# Aumentar memória Docker Desktop
-# Settings > Resources > Memory (aumente para 4GB+)
-
-# Ou usar comando
-docker stats  # Verificar uso
-```
-
----
-
-## 📈 Performance e Monitoramento
-
-### Verificar Uso de Recursos
-```bash
-docker stats
-```
-
-### Verificar Tamanho de Volumes
-```bash
-docker volume ls
-docker volume inspect n8n_data
-```
-
-### Limpeza de Recursos Não Utilizados
-```bash
-# Remover imagens não utilizadas
-docker image prune
-
-# Remover containers parados
-docker container prune
-
-# Limpeza completa
-docker system prune -a
-```
-
----
-
-## 📝 Checklist de Configuração Inicial
-
-- [ ] Alterar senha PostgreSQL
-- [ ] Alterar senha Redis
-- [ ] Alterar Evolution API Key
-- [ ] Configurar Ngrok token/URL pessoal
-- [ ] Criar arquivo `.env` com variáveis sensíveis
-- [ ] Configurar workflows em n8n
-- [ ] Configurar credenciais Evolution API em n8n
-- [ ] Testar scraper endpoint
-- [ ] Testar webhook Evolution API
-- [ ] Configurar backup automático PostgreSQL
-
----
-
-## 📚 Recursos Úteis
-
-- **n8n Docs**: https://docs.n8n.io
-- **Evolution API Docs**: https://evolution-api.com/docs
-- **Docker Compose Docs**: https://docs.docker.com/compose
-- **PostgreSQL Docs**: https://www.postgresql.org/docs
-- **Redis Docs**: https://redis.io/documentation
-- **FastAPI Docs**: https://fastapi.tiangolo.com
-
----
-
-## 🤝 Support e Contribuições
-
-Para issues ou melhorias, consulte:
-- Documentação da Evolution API
-- Dashboard n8n
-- Logs Docker
-
----
-
-**Última Atualização**: 2026  
-**Versão da Documentação**: 1.0
+- **Escala de Operação:** Aumento de até 10x na capacidade diária de postagem de produtos sem acréscimo de tempo manual.
+- **Padronização Visual:** Todas as mensagens seguem a mesma identidade de marca, pontuação, uso de emojis e diagramação.
+- **Fidelidade de Informação:** Preços e cupons são validados no momento exato da extração, evitando ofertas desatualizadas.
+- **Resiliência:** Arquitetura desacoplada que permite atualizar o scraper ou o provedor de IA sem afetar a orquestração geral.
