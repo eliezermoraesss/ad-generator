@@ -1,4 +1,4 @@
-# 🚀 Ad Generator — Automação de Ofertas com IA, n8n e WhatsApp
+# 🚀 Ad Generator — Gerador de Anúncios de Ofertas com IA, n8n e WhatsApp
 
 Solução completa de engenharia e automação de processos voltada para operações de afiliados, transformando a coleta, estruturação, copywriting com Inteligência Artificial e distribuição de ofertas em um fluxo automatizado, escalável e de alta conversão.
 
