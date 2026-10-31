@@ -2,14 +2,18 @@
 
 Solução completa de engenharia e automação de processos voltada para operações de afiliados, transformando a coleta, estruturação, copywriting com Inteligência Artificial e distribuição de ofertas em um fluxo automatizado, escalável e de alta conversão.
 
+![1793485183248](image/README/1793485183248.png)![1793485208239](image/README/1793485208239.png)
+
 ---
 
 ## 📌 Sobre o Projeto
 
 ### O Contexto e a Dor de Negócio
+
 No mercado de marketing de afiliados (Mercado Livre, Amazon, Shopee e outros grandes marketplaces), o faturamento está diretamente correlacionado à velocidade e constância na publicação de promoções, cupons e oportunidades.
 
 No entanto, o processo tradicional é estritamente manual e repetitivo. Para publicar uma única oferta, o operador precisa:
+
 1. Encontrar o produto em promoção.
 2. Acessar o marketplace e validar os preços (atual vs. original).
 3. Coletar o nome do produto e a imagem principal.
@@ -21,18 +25,20 @@ No entanto, o processo tradicional é estritamente manual e repetitivo. Para pub
 Esse fluxo gera um forte gargalo operacional: **para aumentar o faturamento, é necessário aumentar o trabalho braçal na mesma proporção**.
 
 ### A Solução
+
 O **Ad Generator** transforma essa rotina manual em um pipeline automatizado de ponta a ponta:
 
 ```text
 Link → Scraping → Processamento → IA → Oferta Formatada → WhatsApp
 ```
 
-| Modelo | Fluxo de Ação |
-| :--- | :--- |
-| **Antes (Manual)** | Pesquisar → Copiar → Formatar → Criar texto → Editar → Copiar imagem → Publicar |
+| Modelo                          | Fluxo de Ação                                                                                      |
+| :------------------------------ | :--------------------------------------------------------------------------------------------------- |
+| **Antes (Manual)**        | Pesquisar → Copiar → Formatar → Criar texto → Editar → Copiar imagem → Publicar                |
 | **Depois (Ad Generator)** | **Fornecer o link → Processamento automático → Oferta gerada → Distribuição multicanal** |
 
 ### Destaques e Capacidades do Sistema
+
 - **Suporte Específico para Marketplaces:** Tratamento dedicado para **Mercado Livre** e **Amazon**, identificando variações de layout, seletores dinâmicos e regras de extração.
 - **Normalização de URLs e Links:** Tratamento robusto de URLs encurtadas, links diretos de afiliados e parâmetros de rastreamento.
 - **Tratamento Automático de Imagens:** Normalização de formatos incompatíveis (como WEBP e PNG) convertendo-os para JPG padronizado antes do disparo.
@@ -41,7 +47,9 @@ Link → Scraping → Processamento → IA → Oferta Formatada → WhatsApp
 - **Checkpoints e Tratamento de Erros:** Rastreamento do ciclo de vida da requisição (desde o carregamento do DOM até a geração final da mensagem), facilitando diagnóstico e reexecução.
 
 ### Evolução Profissional e Engenharia
+
 Mais do que utilizar diversas ferramentas isoladas, este projeto consolidou conceitos arquiteturais essenciais:
+
 - Integração modular entre APIs REST e serviços heterogêneos.
 - Web scraping resiliente com automação headless (Playwright).
 - Orquestração de workflows de dados e lógica condicional com n8n.
@@ -104,32 +112,32 @@ Um dos pilares do projeto é a **separação clara de responsabilidades**: o orq
 
 ### Componentes e Papel de Cada Tecnologia
 
-| Componente | Tecnologia | Responsabilidade Principal |
-| :--- | :--- | :--- |
-| **Orquestrador** | `n8n` | Recebe as entradas, direciona o fluxo, coordena as chamadas HTTP, gerencia os checkpoints e bifurcações (ex: produto com imagem vs. sem imagem). |
-| **API de Coleta** | `Python + FastAPI` | Expõe endpoints REST internos (`/scrape`, `/health`) com tipagem, documentação Swagger e controle assíncrono. |
-| **Automação Web** | `Playwright` | Inicializa navegadores Chromium headless, executa espera explícita por elementos (`domcontentloaded`, seletores de preço/título) e contorna SPAs. |
-| **Copywriting** | `Inteligência Artificial (Gemini)` | Processa o JSON estruturado do produto e produz a mensagem final de vendas, aplicando técnicas de persuasão, gatilhos de urgência e links rastreados. |
-| **Gateway WhatsApp** | `Evolution API` *(ou WAHA)* | Conecta instâncias do WhatsApp via QR Code/Webhook, provendo envio de mensagens de texto, mídias e tratamento de eventos em tempo real. |
-| **Cache & Filas** | `Redis` | Garante controle de taxa de requisições, idempotência (evitando envio repetido de ofertas) e cache de sessões da API do WhatsApp. |
-| **Banco de Dados** | `PostgreSQL` | Persistência das instâncias do WhatsApp, histórico de publicações, fila de agendamento de links e métricas de meta diária. |
-| **Infraestrutura** | `Docker Compose` | Padroniza e isola toda a stack em containers conectados por uma rede interna unificada (`evolution_n8n_net`). |
+| Componente                 | Tecnologia                            | Responsabilidade Principal                                                                                                                               |
+| :------------------------- | :------------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Orquestrador**     | `n8n`                               | Recebe as entradas, direciona o fluxo, coordena as chamadas HTTP, gerencia os checkpoints e bifurcações (ex: produto com imagem vs. sem imagem).       |
+| **API de Coleta**    | `Python + FastAPI`                  | Expõe endpoints REST internos (`/scrape`, `/health`) com tipagem, documentação Swagger e controle assíncrono.                                    |
+| **Automação Web**  | `Playwright`                        | Inicializa navegadores Chromium headless, executa espera explícita por elementos (`domcontentloaded`, seletores de preço/título) e contorna SPAs.   |
+| **Copywriting**      | `Inteligência Artificial (Gemini)` | Processa o JSON estruturado do produto e produz a mensagem final de vendas, aplicando técnicas de persuasão, gatilhos de urgência e links rastreados. |
+| **Gateway WhatsApp** | `Evolution API` *(ou WAHA)*       | Conecta instâncias do WhatsApp via QR Code/Webhook, provendo envio de mensagens de texto, mídias e tratamento de eventos em tempo real.                |
+| **Cache & Filas**    | `Redis`                             | Garante controle de taxa de requisições, idempotência (evitando envio repetido de ofertas) e cache de sessões da API do WhatsApp.                    |
+| **Banco de Dados**   | `PostgreSQL`                        | Persistência das instâncias do WhatsApp, histórico de publicações, fila de agendamento de links e métricas de meta diária.                        |
+| **Infraestrutura**   | `Docker Compose`                    | Padroniza e isola toda a stack em containers conectados por uma rede interna unificada (`evolution_n8n_net`).                                          |
 
 ---
 
 ## 🤖 Workflow AdGenerator v5 — Triggers, Horários e Comandos do Bot
 
-O workflow principal [AdGenerator_v5.json](file:///e:/N8N%20Waha%20Local/AdGenerator_v5.json) implementa inteligência de roteamento de comandos, agendamentos cronometrados, controle de metas diárias e envio para o grupo oficial de afiliados.
+O workflow principal [AdGenerator_v5.json](<file:///e:/N8N%20Waha%20Local/AdGenerator_v5.json>) implementa inteligência de roteamento de comandos, agendamentos cronometrados, controle de metas diárias e envio para o grupo oficial de afiliados.
 
 ### 1. Triggers e Agendamentos Cron
 
-| Trigger / Gatilho | Tipo | Expressão Cron / Path | Horário / Frequência | Ação Executada |
-| :--- | :--- | :--- | :--- | :--- |
-| **`Webhook`** | Webhook HTTP | `POST /webhook/d5260661-3a03-4695-83d0-7faa4a304f67` | Tempo real | Recebe eventos de mensagens do WhatsApp (`messages.upsert`) enviadas pelo operador para o bot. |
-| **`Schedule Trigger Enviar Anúncios`** | Agendador Cron | `0 8-21 * * *` | Das **08:00 às 21:00**, a cada hora cheia | Busca até **5 links pendentes** na fila do PostgreSQL, realiza o scraping em lote, aciona a IA e publica no **Grupo Compra Inteligente** com imagem e copy. |
-| **`Schedule Trigger Alerta fila vazia`** | Agendador Cron | `30 7-20 * * *` | Das **07:30 às 20:30**, a cada hora (minuto 30) | Audita a fila. Se estiver vazia, alerta os operadores no WhatsApp. Se contiver links, calcula e atualiza a projeção para bater a **meta de 65 anúncios/dia**. |
-| **`Schedule Trigger Apagar links da fila`** | Agendador Cron | `5 21 * * *` | Diariamente às **21:05** | Limpa os links restantes da fila do dia no banco de dados após o término da janela de disparos. |
-| **`Schedule Trigger Apagar links antigos`** | Agendador Cron | `10 8 * * *` | Diariamente às **08:10** | Expurga registros e históricos obsoletos para manutenção e performance do PostgreSQL. |
+| Trigger / Gatilho                                   | Tipo           | Expressão Cron / Path                                 | Horário / Frequência                                 | Ação Executada                                                                                                                                                         |
+| :-------------------------------------------------- | :------------- | :----------------------------------------------------- | :----------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`Webhook`**                               | Webhook HTTP   | `POST /webhook/d5260661-3a03-4695-83d0-7faa4a304f67` | Tempo real                                             | Recebe eventos de mensagens do WhatsApp (`messages.upsert`) enviadas pelo operador para o bot.                                                                         |
+| **`Schedule Trigger Enviar Anúncios`**     | Agendador Cron | `0 8-21 * * *`                                       | Das **08:00 às 21:00**, a cada hora cheia       | Busca até **5 links pendentes** na fila do PostgreSQL, realiza o scraping em lote, aciona a IA e publica no **Grupo Compra Inteligente** com imagem e copy. |
+| **`Schedule Trigger Alerta fila vazia`**    | Agendador Cron | `30 7-20 * * *`                                      | Das **07:30 às 20:30**, a cada hora (minuto 30) | Audita a fila. Se estiver vazia, alerta os operadores no WhatsApp. Se contiver links, calcula e atualiza a projeção para bater a **meta de 65 anúncios/dia**.   |
+| **`Schedule Trigger Apagar links da fila`** | Agendador Cron | `5 21 * * *`                                         | Diariamente às **21:05**                        | Limpa os links restantes da fila do dia no banco de dados após o término da janela de disparos.                                                                        |
+| **`Schedule Trigger Apagar links antigos`** | Agendador Cron | `10 8 * * *`                                         | Diariamente às **08:10**                        | Expurga registros e históricos obsoletos para manutenção e performance do PostgreSQL.                                                                                 |
 
 ---
 
@@ -179,19 +187,24 @@ if (agora.test(message)) {
 ### 3. Como Operar o Bot no WhatsApp (Exemplos de Mensagens e Respostas)
 
 #### ⚡ Modo 1: Disparo Imediato (`agora`)
+
 - **Objetivo:** Processar e postar uma oferta relâmpago urgente ou testar a formatação de um produto imediatamente, sem entrar na fila de agendamento.
 - **Como acionar:** Envie uma mensagem contendo o link do produto e a palavra **`agora`** (maiúscula ou minúscula).
 - **Exemplos de mensagens enviadas pelo operador:**
+
   ```text
   agora https://www.mercadolivre.com.br/p/MLB28941235
   ```
+
   ```text
   processa agora https://www.amazon.com.br/dp/B09XYZ cupom TECH10
   ```
+
   ```text
   https://mercadolivre.com/sec/2aBcDe manda agora, desc 15%
   ```
 - **Comportamento do Bot:**
+
   1. Identifica a palavra `agora` e ignora a fila do banco.
   2. Dispara requisição direta ao Scraper Playwright (`http://scraper:8000/scrape`).
   3. Envia os dados estruturados para o **AI Agent (Gemini)** formatar a copy.
@@ -202,6 +215,7 @@ if (agora.test(message)) {
 ---
 
 #### 📅 Modo 2: Inserção na Fila de Agendamento (`agendamento`)
+
 - **Objetivo:** Abastecer a operação diária. O operador envia um ou múltiplos produtos para serem postados automaticamente de hora em hora (5 por hora) no **Grupo Compra Inteligente** (`120363406064472961@g.us`).
 - **Como acionar:** Envie links sem usar a palavra `agora` ou `contagem`. É possível enviar **vários links em uma única mensagem** (um por linha), além de cupons e descontos.
 - **Sintaxe de extração suportada pelo bot:**
@@ -223,16 +237,20 @@ if (agora.test(message)) {
 ---
 
 #### 📊 Modo 3: Consulta de Fila e Meta Diária (`contagem`)
+
 - **Objetivo:** Consultar em tempo real quantos anúncios já foram gerados, quantos ainda estão na fila e a previsão do último horário de envio.
 - **Como acionar:** Envie uma mensagem contendo a palavra **`contagem`**.
 - **Exemplos de mensagens enviadas pelo operador:**
+
   ```text
   contagem
   ```
+
   ```text
   qual a contagem?
   ```
 - **Respostas possíveis enviadas pelo Bot:**
+
   - **Fluxo com links na fila (em andamento):**
     ```text
     recebi até o momento *35 de 65 links* previstos para hoje! 📌
@@ -278,7 +296,7 @@ O sistema monitora a saúde operacional e notifica diretamente os administradore
   Se o `Schedule Trigger Alerta fila vazia` rodar e constatar zero links na fila, envia mensagem individual para **Eliezer**, **Nádia** e **Pedro**:
   ```text
   [Nome do Operador], estou sem links para gerar os anúncios...
-    
+
   Por favor, assim que puder, me envie links para mantermos nossos ganhos, tá bom? 😉
   ```
 - **Alerta de Instabilidade de IA (Fallback):**
@@ -311,6 +329,7 @@ Por 🔥*R$ 2.799,00*🔥
 ```
 
 #### Regras Obrigatórias de Formatação:
+
 1. **Frase de Efeito Inicial:** Gancho com urgência, emoção ou curiosidade em negrito (ex: `*⚡ Últimas horas nesse valor*`, `*🤯 Esse preço me surpreendeu*`).
 2. **Descrição do Produto:** Até 7 palavras descritivas, incluindo marca e quantidade, sem termos repetidos.
 3. **Preço Anterior Tachado:** Exibido com `~R$ valor~` somente quando houver desconto real de no mínimo R$ 10,00.
@@ -432,17 +451,20 @@ REDIS_EVOLUTION_PORT=6380
 ### 5. Guia de Execução da Infraestrutura
 
 #### Iniciar todos os serviços
+
 ```bash
 cd "E:\N8N Waha Local"
 docker compose up -d
 ```
 
 #### Verificar status dos containers
+
 ```bash
 docker compose ps
 ```
 
 #### Acompanhar logs em tempo real
+
 ```bash
 # Todos os containers
 docker compose logs -f
@@ -458,12 +480,14 @@ docker compose logs -f evolution_api
 ```
 
 #### Rebuild do serviço Scraper após alterações no código
+
 ```bash
 docker compose build --no-cache scraper
 docker compose up -d scraper
 ```
 
 #### Parar a stack
+
 ```bash
 docker compose down
 ```
@@ -473,12 +497,14 @@ docker compose down
 ## 🐳 Detalhamento dos Containers da Stack
 
 ### 1. `n8n` — Workflow Automation
+
 - **Imagem:** `n8nio/n8n:latest`
 - **Porta Host:** `5678` (`http://localhost:5678`)
 - **Volume:** `n8n_data:/home/node/.n8n`
 - **Função:** Central de inteligência de fluxos, integração de APIs, regras condicionais e interface de monitoramento.
 
 ### 2. `scraper` — Microserviço de Scraping
+
 - **Imagem:** Build local a partir de `./scraper` (Python 3.10 + FastAPI + Playwright)
 - **Porta Host:** `8000` (`http://localhost:8000/docs`)
 - **Endpoints:**
@@ -487,6 +513,7 @@ docker compose down
 - **Função:** Isolamento do processo de renderização e extração de páginas pesadas de e-commerce.
 
 ### 3. `evolution_api` — WhatsApp Gateway
+
 - **Imagem:** `evoapicloud/evolution-api:latest`
 - **Porta Host:** `8080` (`http://localhost:8080`)
 - **Banco:** PostgreSQL 15 (`postgres_evolution`)
@@ -494,17 +521,20 @@ docker compose down
 - **Função:** Gerenciamento de sessões de WhatsApp, QR Code, webhooks de mensagens e envio de mídias.
 
 ### 4. `postgres_evolution` — Banco de Dados
+
 - **Imagem:** `postgres:15`
 - **Porta Host:** `5436` (mapeada para `5432` interno)
 - **Volume:** `postgres_evolution_data:/var/lib/postgresql/data`
 - **Função:** Persistência relacional das instâncias, mensagens da Evolution API e tabela de agendamentos de links.
 
 ### 5. `redis_evolution` — Cache WhatsApp
+
 - **Imagem:** `redis:latest`
 - **Porta Host:** `6380` (mapeada para `6379` interno)
 - **Função:** Sessões ativas e cache da Evolution API.
 
 ### 6. `redis` — Cache do n8n
+
 - **Imagem:** `redis:latest`
 - **Porta Host:** `6379`
 - **Função:** Gerenciamento de filas de execução e estado para o n8n.
@@ -514,6 +544,7 @@ docker compose down
 ## 🔌 Networking Interno
 
 Todos os containers comunicam-se via bridge network `evolution_n8n_net`, utilizando resolução de nomes DNS interna:
+
 - `http://n8n:5678`
 - `http://scraper:8000`
 - `http://evolution_api:8080`
