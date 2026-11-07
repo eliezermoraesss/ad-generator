@@ -567,3 +567,22 @@ Todos os containers comunicam-se via bridge network `evolution_n8n_net`, utiliza
 - **Padronização Visual:** Todas as mensagens seguem a mesma identidade de marca, pontuação, uso de emojis e diagramação.
 - **Fidelidade de Informação:** Preços e cupons são validados no momento exato da extração, evitando ofertas desatualizadas.
 - **Resiliência:** Arquitetura desacoplada que permite atualizar o scraper ou o provedor de IA sem afetar a orquestração geral.
+
+## 👨‍💻 Desenvolvedor
+
+| [<img loading="lazy" src="https://avatars.githubusercontent.com/eliezermoraesss" width=115><br><sub>Eliezer Moraes</sub>](https://github.com/eliezermoraesss) |
+| :---: |
+
+- **Email**: [eliezer.moraes@outlook.com](mailto:eliezer.moraes@outlook.com)
+- **LinkedIn**: [Eliezer Moraes Silva](https://www.linkedin.com/in/eliezer-moraes-silva-80b68010b)
+- **GitHub**: [@eliezermoraesss](https://github.com/eliezermoraesss)
+- **Instagram**: [@eliezer.moraesss](https://www.instagram.com/eliezer.moraesss/)
+- **Wakatime**: [@eliezermoraes](https://wakatime.com/@eliezermoraes)
+
+## 📝 Licença
+
+Este projeto está sob a licença [MIT](LICENSE).
+
+---
+
+<p align="center">Desenvolvido com 💙 por <a href="https://www.linkedin.com/in/eliezer-moraes-silva-80b68010b/">Eliezer Moraes Silva</a></p>
